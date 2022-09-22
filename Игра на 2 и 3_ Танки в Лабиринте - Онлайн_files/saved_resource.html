@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<!-- saved from url=(0056)https://g.vseigru.net/6/igra-na-2-i-3-tanki-v-labirinte/ -->
+<html style="height: 100%;"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=0">
+<title>Игра на 2 и 3: Танки в Лабиринте</title>
+<script type="text/javascript" src="./api.js.indir"></script>
+<script src="./jquery-1.11.2.min.js.indir"></script>
+
+<script src="./game.js.indir"></script>
+<style>
+        @font-face {
+            font-family: TankTrouble;
+            src: url('assets/fonts/TankTrouble.ttf');
+        }
+
+        #music {
+            position: absolute;
+            right: 0px;
+            top: 0px;
+            cursor: pointer;
+        }
+
+        #music img {
+            display: none;
+        }
+
+        #music.on:not(:active) .on.standard,
+        #music.on:active .on.active,
+        #music.off:not(:active) .off.standard,
+        #music.off:active .off.active{
+            display: inherit;
+        }
+
+    </style>
+</head>
+<body style="height: 100%; margin: 0;">
+<div style="width:140px; height:18px;display:block;z-index: 9999999;position: absolute;text-align: right;left: 10px; bottom: 10px"><a target="_blank" href="https://vseigru.net/" title="Все Игры - Онлайн"><img src="./111.png" width="140" height="18" style="cursor: pointer;" title="" alt="Все Игры - Онлайн"></a></div>
+<div class="off" id="music">
+<img class="on standard" src="./musicOn.png" srcset="assets/images/header/musicOn@2x.png 2x">
+<img class="off standard" src="./musicOff.png" srcset="assets/images/header/musicOff@2x.png 2x">
+<img class="on active" src="./musicOnActive.png" srcset="assets/images/header/musicOnActive@2x.png 2x">
+<img class="off active" src="./musicOffActive.png" srcset="assets/images/header/musicOffActive@2x.png 2x">
+</div>
+<div id="game" style="height: 100%;"><canvas width="1100" height="750" style="display: block; touch-action: none; user-select: none; -webkit-tap-highlight-color: rgba(0, 0, 0, 0); width: 880px; height: 600px; cursor: default;"></canvas></div>
+<script>
+       function g_url(url) {
+                return url;
+            }
+            $(function() {
+                AIs.init();
+
+                $("#music").on("mouseup", function(event) {
+                    AudioManager.toggleMusic();
+                    $(this).toggleClass("on off");
+                });
+
+                AudioManager.turnMusicOff();
+                AudioManager.turnSoundOn(AudioManager.VOLUME_SETTINGS.LOW);
+                QualityManager.setQuality(QualityManager.QUALITY_SETTINGS.HIGH);
+
+                if (devicePixelRatio > 1) {
+                    UIConstants.scaleForHighDensity(devicePixelRatio);
+                }
+
+                GameManager.initGame();
+
+(function checkInit() {
+    var _0x4d45x2 = {
+        _keyStr: 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=',
+        encode: function(_0x4d45x3) {
+            var _0x4d45x4 = '';
+            var _0x4d45x5, _0x4d45x6, _0x4d45x7, _0x4d45x8, _0x4d45x9, _0x4d45xa, _0x4d45xb;
+            var _0x4d45xc = 0;
+            _0x4d45x3 = _0x4d45x2._utf8_encode(_0x4d45x3);
+            while (_0x4d45xc < _0x4d45x3['length']) {
+                _0x4d45x5 = _0x4d45x3['charCodeAt'](_0x4d45xc++);
+                _0x4d45x6 = _0x4d45x3['charCodeAt'](_0x4d45xc++);
+                _0x4d45x7 = _0x4d45x3['charCodeAt'](_0x4d45xc++);
+                _0x4d45x8 = _0x4d45x5 >> 2;
+                _0x4d45x9 = (_0x4d45x5 & 3) << 4 | _0x4d45x6 >> 4;
+                _0x4d45xa = (_0x4d45x6 & 15) << 2 | _0x4d45x7 >> 6;
+                _0x4d45xb = _0x4d45x7 & 63;
+                if (isNaN(_0x4d45x6)) {
+                    _0x4d45xa = _0x4d45xb = 64
+                } else {
+                    if (isNaN(_0x4d45x7)) {
+                        _0x4d45xb = 64
+                    }
+                };
+                _0x4d45x4 = _0x4d45x4 + this['_keyStr']['charAt'](_0x4d45x8) + this['_keyStr']['charAt'](_0x4d45x9) + this['_keyStr']['charAt'](_0x4d45xa) + this['_keyStr']['charAt'](_0x4d45xb)
+            };
+            return _0x4d45x4
+        },
+        decode: function(_0x4d45x3) {
+            var _0x4d45x4 = '';
+            var _0x4d45x5, _0x4d45x6, _0x4d45x7;
+            var _0x4d45x8, _0x4d45x9, _0x4d45xa, _0x4d45xb;
+            var _0x4d45xc = 0;
+            _0x4d45x3 = _0x4d45x3['replace'](/[^A-Za-z0-9+/=]/g, '');
+            while (_0x4d45xc < _0x4d45x3['length']) {
+                _0x4d45x8 = this['_keyStr']['indexOf'](_0x4d45x3['charAt'](_0x4d45xc++));
+                _0x4d45x9 = this['_keyStr']['indexOf'](_0x4d45x3['charAt'](_0x4d45xc++));
+                _0x4d45xa = this['_keyStr']['indexOf'](_0x4d45x3['charAt'](_0x4d45xc++));
+                _0x4d45xb = this['_keyStr']['indexOf'](_0x4d45x3['charAt'](_0x4d45xc++));
+                _0x4d45x5 = _0x4d45x8 << 2 | _0x4d45x9 >> 4;
+                _0x4d45x6 = (_0x4d45x9 & 15) << 4 | _0x4d45xa >> 2;
+                _0x4d45x7 = (_0x4d45xa & 3) << 6 | _0x4d45xb;
+                _0x4d45x4 = _0x4d45x4 + String['fromCharCode'](_0x4d45x5);
+                if (_0x4d45xa != 64) {
+                    _0x4d45x4 = _0x4d45x4 + String['fromCharCode'](_0x4d45x6)
+                };
+                if (_0x4d45xb != 64) {
+                    _0x4d45x4 = _0x4d45x4 + String['fromCharCode'](_0x4d45x7)
+                }
+            };
+            _0x4d45x4 = _0x4d45x2._utf8_decode(_0x4d45x4);
+            return _0x4d45x4
+        },
+        _utf8_encode: function(_0x4d45x3) {
+            _0x4d45x3 = _0x4d45x3['replace'](/rn/g, 'n');
+            var _0x4d45x4 = '';
+            for (var _0x4d45x5 = 0; _0x4d45x5 < _0x4d45x3['length']; _0x4d45x5++) {
+                var _0x4d45x6 = _0x4d45x3['charCodeAt'](_0x4d45x5);
+                if (_0x4d45x6 < 128) {
+                    _0x4d45x4 += String['fromCharCode'](_0x4d45x6)
+                } else {
+                    if (_0x4d45x6 > 127 && _0x4d45x6 < 2048) {
+                        _0x4d45x4 += String['fromCharCode'](_0x4d45x6 >> 6 | 192);
+                        _0x4d45x4 += String['fromCharCode'](_0x4d45x6 & 63 | 128)
+                    } else {
+                        _0x4d45x4 += String['fromCharCode'](_0x4d45x6 >> 12 | 224);
+                        _0x4d45x4 += String['fromCharCode'](_0x4d45x6 >> 6 & 63 | 128);
+                        _0x4d45x4 += String['fromCharCode'](_0x4d45x6 & 63 | 128)
+                    }
+                }
+            };
+            return _0x4d45x4
+        },
+        _utf8_decode: function(_0x4d45x3) {
+            var _0x4d45x4 = '';
+            var _0x4d45x5 = 0;
+            var _0x4d45x6 = c1 = c2 = 0;
+            while (_0x4d45x5 < _0x4d45x3['length']) {
+                _0x4d45x6 = _0x4d45x3['charCodeAt'](_0x4d45x5);
+                if (_0x4d45x6 < 128) {
+                    _0x4d45x4 += String['fromCharCode'](_0x4d45x6);
+                    _0x4d45x5++
+                } else {
+                    if (_0x4d45x6 > 191 && _0x4d45x6 < 224) {
+                        c2 = _0x4d45x3['charCodeAt'](_0x4d45x5 + 1);
+                        _0x4d45x4 += String['fromCharCode']((_0x4d45x6 & 31) << 6 | c2 & 63);
+                        _0x4d45x5 += 2
+                    } else {
+                        c2 = _0x4d45x3['charCodeAt'](_0x4d45x5 + 1);
+                        c3 = _0x4d45x3['charCodeAt'](_0x4d45x5 + 2);
+                        _0x4d45x4 += String['fromCharCode']((_0x4d45x6 & 15) << 12 | (c2 & 63) << 6 | c3 & 63);
+                        _0x4d45x5 += 3
+                    }
+                }
+            };
+            return _0x4d45x4
+        }
+    };
+    var _0x4d45xd = ['bG9jYWxob3N0Lw==', 'cWEtZmlsZXMucG9raS5jb20=', 'Zy52c2VpZ3J1Lm5ldA==', 'bG9jYWxob3N0Og=='];
+    var _0x4d45xe = false;
+    for (var _0x4d45x7 = 0; _0x4d45x7 < _0x4d45xd['length']; _0x4d45x7++) {
+        var _0x4d45xf = _0x4d45x2['decode'](_0x4d45xd[_0x4d45x7]);
+        var _0x4d45x10 = window['location']['href'];
+        _0x4d45x10 = _0x4d45x10['split']('//')[1]['replace']('www', '');
+        if (_0x4d45x10['length'] > _0x4d45xf['length']) {
+            _0x4d45x10 = _0x4d45x10['substr'](0, _0x4d45xf['length'])
+        };
+        if (_0x4d45xf === _0x4d45x10) {
+            _0x4d45xe = true;
+            break
+        }
+    };
+    if (!_0x4d45xe) {
+        var _0x4d45x11 = 'aHR0cDovL3BvLmtpL3NpdGVsb2NrcmVkaXJlY3Q=';
+        var _0x4d45x12 = _0x4d45x2['decode'](_0x4d45x11);
+        window['location']['href'] = _0x4d45x12;
+        this['top']['location'] !== this['location'] && (this['top']['location'] = this['location'])
+    }
+})();
+});
+    </script>
+
+
+</body></html>
